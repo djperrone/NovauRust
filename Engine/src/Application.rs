@@ -5,18 +5,20 @@ use std::cell::RefCell;
 use std::rc::Rc;
 type StateRef = Rc<RefCell<dyn State>>;
 
+use crate::OpenGLContext::*;
+use spdlog::prelude::*;
+
 pub struct App {
     _m_DeltaTime: f32,
     m_IsRunning: bool,
-    _m_Window: Window,
     m_StateMachine: Rc<RefCell<StateMachine>>,
-    _m_Title: String,
+    m_Context: Rc<RefCell<Context>>,
 }
 
-pub struct Window {
-    _m_Width: f32,
-    _m_Height: f32,
-}
+// pub struct Window {
+//     _m_Width: f32,
+//     _m_Height: f32,
+// }
 
 // pub trait Executable
 // {
@@ -24,22 +26,18 @@ pub struct Window {
 // }
 
 impl App {
-    pub fn new(title: &str, width: f32, height: f32) -> Self {
+    pub fn new(title: &str, width: u32, height: u32) -> Self {
         App {
             _m_DeltaTime: 0.0,
             m_IsRunning: true,
-            _m_Window: Window {
-                _m_Width: width,
-                _m_Height: height,
-            },
             m_StateMachine: Rc::new(RefCell::new(StateMachine::new())),
-            _m_Title: String::from(title),
+            m_Context: Rc::new(RefCell::new(Context::new(title, width, height))),
         }
     }
 
     pub fn Update(&mut self) {
-        println!("App updating...");
-        self.m_StateMachine.as_ref().borrow_mut().Update();
+        info!("App updating...");
+        self.m_StateMachine.borrow_mut().Update();
     }
 
     pub fn IsRunning(&self) -> bool {
@@ -51,34 +49,27 @@ impl App {
     }
 
     pub fn Run(&mut self, initialState: StateRef) -> () {
-        self.GetStateMachine().borrow_mut().PushState(initialState);
 
-        // temp way to stop the running loop
-        let mut n = 5;
-        while self.IsRunning() {
-            n -= 1;
-            if n == 0 {
+        self.m_StateMachine.borrow_mut().PushState(initialState);
+
+        loop {
+            self.m_IsRunning = self.m_Context.borrow_mut().HandleInput();
+
+            let currentState = self.GetStateMachine().borrow_mut().GetCurrentState();
+
+            if !self.IsRunning() || !currentState.borrow_mut().IsRunning() {
+                currentState.borrow_mut().OnExit();
                 break;
             }
 
-            if self
-                .GetStateMachine()
-                .borrow_mut()
-                .GetCurrentState()
-                .borrow_mut()
-                .ShouldTransition()
-            {
+            if currentState.borrow_mut().ShouldTransition() {
                 // push next state
-                let nextState = self
-                    .GetStateMachine()
-                    .borrow_mut()
-                    .GetCurrentState()
-                    .borrow_mut()
-                    .GetNextState();
+                let nextState = currentState.borrow_mut().GetNextState();
 
-                self.GetStateMachine().as_ref().borrow_mut().PopState();
-
-                self.GetStateMachine().borrow_mut().PushState(nextState);
+                let mut sm = self.m_StateMachine.borrow_mut();
+                sm.PopState();
+                sm.PushState(nextState);
+                
             } else {
                 self.Update();
             }

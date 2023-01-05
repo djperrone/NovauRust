@@ -27,7 +27,7 @@ impl StateMachine {
         self.m_States.push(s);
         let s2 = self.m_States.last();
         match s2 {
-            Some(s2) => s2.as_ref().borrow_mut().OnEnter(),
+            Some(s2) => s2.borrow_mut().OnEnter(),
             None => false,
         };
     }
@@ -41,14 +41,16 @@ impl StateMachine {
         let last = self.m_States.pop();
 
         match last {
-            Some(last) => last.as_ref().borrow_mut().OnExit(),
+            Some(last) => last.borrow_mut().OnExit(),
             None => false,
         };
     }
 
     pub fn Update(&mut self) -> () {
         for s in &self.m_States {
-            s.as_ref().borrow_mut().Update();
+            // s.as_ref().borrow_mut().HandleInput();
+            s.borrow_mut().Update();
+            s.borrow_mut().Draw();
         }
     }
 

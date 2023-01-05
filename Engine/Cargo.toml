@@ -7,3 +7,9 @@ edition = "2021"
 
 [dependencies]
 
+spdlog-rs = "0.3"
+#beryllium = "0.2.0-alpha.2"
+beryllium = { version = "0.2.0-alpha.1", default-features = false, features = ["link_static"] }
+bytemuck = "1"
+ogl33 = { version = "0.2.0", features = ["debug_error_checks"]}
+imagine = "0.0.5"

@@ -2,5 +2,6 @@
 
 pub mod Application;
 pub mod Input;
+pub mod OpenGLContext;
 pub mod State;
 pub mod StateMachine;

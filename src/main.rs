@@ -13,4 +13,5 @@ fn main() {
     let mut app = Application::App::new("test", 800.0, 600.0);
     
     app.Run(Rc::new(RefCell::new(Level::new(5))));
+
 }

@@ -3,24 +3,26 @@ use std::rc::Rc;
 
 use spdlog::prelude::*;
 
+use crate::Input::InputController;
+
 
 pub trait State {
     fn Update(&mut self) {
-        info!("default update");
+        // info!("default update");
     }
     fn Draw(&mut self) {
-        info!("default draw");
+        // info!("default draw");
     }
     fn HandleInput(&mut self) {
-        info!("default Handle input");
+        // info!("default Handle input");
     }
 
     fn OnEnter(&mut self) -> bool {
-        info!("entering");
+        // info!("entering");
         true
     }
     fn OnExit(&mut self) -> bool {
-        info!("exiting");
+        // info!("exiting");
 
         true
     }
@@ -36,6 +38,11 @@ pub trait State {
     fn GetNextState(&self) -> StateRef {
         info!("default next state");
         Rc::new(RefCell::new(DefaultState::new()))
+    }
+
+    fn GetInputController(&self) -> Option<Rc<RefCell<InputController>>>
+    {
+        None
     }
 }
 

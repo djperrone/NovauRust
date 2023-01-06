@@ -1,13 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
-
-// use Engine::InputController::InputController;
-
-// mod Input;
 use crate::State::State;
 
 type StateRef = Rc<RefCell<dyn State>>;
-
 
 pub struct StateMachine {
     m_States: Vec<StateRef>,

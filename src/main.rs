@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-// use Engine::InputController::InputController;
-
 use std::cell::RefCell;
 use std::rc::Rc;
 use Engine::Application;

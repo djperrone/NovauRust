@@ -15,4 +15,6 @@ edition = "2021"
 
 Engine = { path = "Engine/" }
 spdlog-rs = "0.3"
+beryllium = { version = "0.2.0-alpha.1", default-features = false, features = ["link_static"] }
+
 #beryllium = "0.2.0-alpha.2"

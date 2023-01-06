@@ -6,7 +6,7 @@ use std::rc::Rc;
 type StateRef = Rc<RefCell<dyn State>>;
 
 use crate::OpenGLContext::*;
-use spdlog::prelude::*;
+// use spdlog::prelude::*;
 
 pub struct App {
     _m_DeltaTime: f32,
@@ -36,7 +36,7 @@ impl App {
     }
 
     pub fn Update(&mut self) {
-        info!("App updating...");
+        // info!("App updating...");
         self.m_StateMachine.borrow_mut().Update();
     }
 
@@ -49,11 +49,16 @@ impl App {
     }
 
     pub fn Run(&mut self, initialState: StateRef) -> () {
-
         self.m_StateMachine.borrow_mut().PushState(initialState);
 
         loop {
-            self.m_IsRunning = self.m_Context.borrow_mut().HandleInput();
+            self.m_IsRunning = self.m_Context.borrow_mut().HandleInput(
+                self.m_StateMachine
+                    .borrow_mut()
+                    .GetCurrentState()
+                    .borrow_mut()
+                    .GetInputController(),
+            );
 
             let currentState = self.GetStateMachine().borrow_mut().GetCurrentState();
 
@@ -69,7 +74,6 @@ impl App {
                 let mut sm = self.m_StateMachine.borrow_mut();
                 sm.PopState();
                 sm.PushState(nextState);
-                
             } else {
                 self.Update();
             }

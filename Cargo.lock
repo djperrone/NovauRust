@@ -18,6 +18,7 @@ name = "Novaura"
 version = "0.1.0"
 dependencies = [
  "Engine",
+ "beryllium",
  "spdlog-rs",
 ]
 

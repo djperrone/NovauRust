@@ -3,18 +3,8 @@ use std::rc::Rc;
 
 use spdlog::prelude::*;
 
-
 extern crate glfw;
-// use glfw::WindowEvent;
-
-// use self::glfw::{Action, Context, Key};
-
 extern crate gl;
-
-use std::sync::mpsc::Receiver;
-
-use crate::Input::InputController;
-
 
 pub trait State {
     fn Update(&mut self) {
@@ -23,12 +13,12 @@ pub trait State {
     fn Draw(&mut self) {
         // info!("default draw");
     }
-    fn HandleKeyBoardInput(&mut self, window: Rc<RefCell<glfw::Window>>, key : glfw::Key, action : glfw::Action, modifiers : glfw::Modifiers) {
+    fn HandleKeyBoardInput(&mut self, _window: Rc<RefCell<glfw::Window>>, _key : glfw::Key, _action : glfw::Action, _modifiers : glfw::Modifiers) {
         // info!("default Handle input");
         
     }
 
-    fn HandleMouseInput(&mut self, window: Rc<RefCell<glfw::Window>>, button : glfw::MouseButton, action : glfw::Action, modifiers : glfw::Modifiers) {
+    fn HandleMouseInput(&mut self, _window: Rc<RefCell<glfw::Window>>, _button : glfw::MouseButton, _action : glfw::Action, _modifiers : glfw::Modifiers) {
         // info!("default Handle input");
         
     }
@@ -56,10 +46,7 @@ pub trait State {
         Rc::new(RefCell::new(DefaultState::new()))
     }
 
-    fn GetInputController(&self) -> Option<Rc<RefCell<InputController>>>
-    {
-        None
-    }
+   
 }
 
 type StateRef = Rc<RefCell<dyn State>>;
@@ -84,6 +71,4 @@ impl State for DefaultState {
     fn ShouldTransition(&self) -> bool {
         self.m_ShouldTransition
     }
-
-   
 }

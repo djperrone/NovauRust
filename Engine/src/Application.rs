@@ -1,3 +1,4 @@
+use crate::Renderer::Renderer::Renderer;
 use crate::State::State;
 use crate::StateMachine::StateMachine;
 
@@ -13,6 +14,7 @@ pub struct App {
     m_IsRunning: bool,
     m_StateMachine: Rc<RefCell<StateMachine>>,
     m_Context: Rc<RefCell<NovaContext>>,
+    m_Renderer: Rc<RefCell<Renderer>>,
 }
 
 impl App {
@@ -22,6 +24,7 @@ impl App {
             m_IsRunning: true,
             m_StateMachine: Rc::new(RefCell::new(StateMachine::new())),
             m_Context: Rc::new(RefCell::new(NovaContext::new(title, width, height))),
+            m_Renderer: Rc::new(RefCell::new(Renderer::new())),
         }
     }
 
@@ -82,6 +85,8 @@ impl App {
                 self.m_Context.borrow_mut().ClearWindow();
 
                 self.Update();
+
+                self.m_Renderer.borrow_mut().DrawTriangle();
 
                 self.m_Context.borrow_mut().SwapBuffers();
 

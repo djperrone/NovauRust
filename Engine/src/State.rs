@@ -3,6 +3,16 @@ use std::rc::Rc;
 
 use spdlog::prelude::*;
 
+
+extern crate glfw;
+// use glfw::WindowEvent;
+
+// use self::glfw::{Action, Context, Key};
+
+extern crate gl;
+
+use std::sync::mpsc::Receiver;
+
 use crate::Input::InputController;
 
 
@@ -13,8 +23,14 @@ pub trait State {
     fn Draw(&mut self) {
         // info!("default draw");
     }
-    fn HandleInput(&mut self) {
+    fn HandleKeyBoardInput(&mut self, window: Rc<RefCell<glfw::Window>>, key : glfw::Key, action : glfw::Action, modifiers : glfw::Modifiers) {
         // info!("default Handle input");
+        
+    }
+
+    fn HandleMouseInput(&mut self, window: Rc<RefCell<glfw::Window>>, button : glfw::MouseButton, action : glfw::Action, modifiers : glfw::Modifiers) {
+        // info!("default Handle input");
+        
     }
 
     fn OnEnter(&mut self) -> bool {

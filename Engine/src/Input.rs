@@ -1,31 +1,34 @@
 #![allow(non_snake_case)]
 
-use beryllium::*;
+// use beryllium::*;
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
+
+extern crate glfw;
 
 type Event = dyn Fn() -> ();
 
-pub enum NovaEvent{
-    Action{ isPressed : bool, isProcessed : bool, event : Box<Event>},
-    Axis {event : Box<Event>},
+pub enum NovaEvent {
+    Action {
+        // isPressed: bool,
+        // isProcessed: bool,
+        event: Box<Event>,
+    },
+    Axis {
+        event: Box<Event>,
+    },
 }
 
-impl NovaEvent
-{
-    pub fn newActionEvent(e : Box<Event>) -> NovaEvent
-    {
-        NovaEvent::Action{
-            isPressed : false,
-            isProcessed : false,
-            event : e
+impl NovaEvent {
+    pub fn newActionEvent(e: Box<Event>) -> NovaEvent {
+        NovaEvent::Action {
+            event: e,
         }
     }
 
-    pub fn newAxisEvent(e : Box<Event>) -> NovaEvent
-    {
-        NovaEvent::Axis{
-            event : e
-        }
+    pub fn newAxisEvent(e: Box<Event>) -> NovaEvent {
+        NovaEvent::Axis { event: e }
     }
 }
 
@@ -42,7 +45,7 @@ pub fn IsPressed(key: &String) -> bool {
 }
 
 pub struct InputController {
-    m_Bindings: HashMap<Keycode, NovaEvent>,
+    m_Bindings: HashMap<glfw::Key, NovaEvent>,
     // m_ActionBindings: HashMap<Keycode, NovaEvent>,
 }
 
@@ -54,15 +57,57 @@ impl InputController {
         }
     }
 
-    pub fn BindEvent(&mut self, key: Keycode, e : NovaEvent) {
+    pub fn BindEvent(&mut self, key: glfw::Key, e: NovaEvent) {
         self.m_Bindings.insert(key, e);
         // match e
         // {
-            // NovaEvent::Axis{event} => self.m_AxisBindings.insert(key, e),
-            // NovaEvent::Axis{event} => self.m_AxisBindings.insert(key, e),
-            // NovaEvent::Action{event, isPressed, isProcessed} => self.m_Bindings.insert(key, e),
-            // _ => ()
+        // NovaEvent::Axis{event} => self.m_AxisBindings.insert(key, e),
+        // NovaEvent::Axis{event} => self.m_AxisBindings.insert(key, e),
+        // NovaEvent::Action{event, isPressed, isProcessed} => self.m_Bindings.insert(key, e),
+        // _ => ()
         // };
+    }
+
+    pub fn HandleAxisEvents(&mut self, window: Rc<RefCell<glfw::Window>>)
+    {
+        for (key, event) in &self.m_Bindings
+        {
+            match event
+            {
+                NovaEvent::Axis { event } => 
+                {
+                    match window.borrow_mut().get_key(*key) 
+                    {
+                        glfw::Action::Press => event(),
+                        _ => (),
+                    }
+                },
+
+                _ => (),
+            }
+        }
+    }
+
+    pub fn HandleActionEvent(&mut self, key : glfw::Key, action : glfw::Action, modifiers : Option<glfw::Modifiers>) 
+    {
+        match self.m_Bindings.get(&key)
+        {
+            Some(k) => 
+            {
+                match k
+                {
+                    NovaEvent::Action { event }=>
+                    {
+                        event();
+                    },
+
+                    _ => (),
+                }
+            },
+
+            None => (),
+        }
+       
     }
 
     pub fn Update(&self) {
@@ -77,33 +122,51 @@ impl InputController {
         // }
     }
 
-    pub fn HandleEvent(&mut self, keycode: Keycode, sdlPressed : bool) {
-        // if self.keyBindings.contains_key(keycode)
-        match self.m_Bindings.get(&keycode) {
-            Some(e) => {
-                match e {
-                    NovaEvent::Axis{event,..} => event(),
-                    NovaEvent::Action{event, mut isPressed, isProcessed} =>
-                    {
-                        if sdlPressed
-                        {
-                            event();
-                            // *isProcessed = true;
-                            isPressed = true;
-                        }
-                    },
-                    _ => ()
-                }
-                },
-            None => (),
-        }
-        // match self.m_ActionBindings.get(&keycode) {
-        //     Some(event) => {
-                
-        //         event()},
-        //     None => (),
-        // }
-    }
+    // pub fn HandleEvent(&mut self, keycode: Keycode, sdlPressed : bool) {
+
+    //     self.m_Bindings.entry(keycode).and_modify(|binding| match binding{
+    //         NovaEvent::Axis { event } => event(),
+    //         NovaEvent::Action { isPressed, isProcessed, event } =>{
+    //             // println!("testing");
+    //             match isPressed {
+    //                 false =>
+    //                 {
+    //                     *isPressed = true;
+    //                     event();
+    //                 },
+    //                 true => (),
+    //                 _ => ()
+    //             }
+    //         }
+    //         _ => ()
+
+    //     });
+    // if self.keyBindings.contains_key(keycode)
+    // match self.m_Bindings.get(&keycode) {
+    //     Some(e) => {
+    //         match e {
+    //             NovaEvent::Axis{event,..} => event(),
+    //             NovaEvent::Action{event, mut isPressed, isProcessed} =>
+    //             {
+    //                 if sdlPressed
+    //                 {
+    //                     event();
+    //                     // *isProcessed = true;
+    //                     isPressed = true;
+    //                 }
+    //             },
+    //             _ => ()
+    //         }
+    //         },
+    //     None => (),
+    // }
+    // match self.m_ActionBindings.get(&keycode) {
+    //     Some(event) => {
+
+    //         event()},
+    //     None => (),
+    // }
+    // }
 }
 
 // }

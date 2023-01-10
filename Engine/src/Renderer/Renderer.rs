@@ -2,10 +2,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+
+// use self::glfw::Context;
+
 extern crate glfw;
-
-use self::glfw::Context;
-
 extern crate gl;
 use gl::types::GLchar;
 use gl::types::GLint;
@@ -48,6 +48,7 @@ impl Renderer
 {
     unsafe
     {
+        
 
      let vertexShader = gl::CreateShader(gl::VERTEX_SHADER);
         let c_str_vert = CString::new(vertexShaderSource.as_bytes()).unwrap();

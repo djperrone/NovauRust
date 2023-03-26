@@ -26,8 +26,14 @@ impl Level {
 }
 impl State for Level 
 {
-    fn Update(&mut self)
+    fn Update(&mut self, window : Rc<RefCell<glfw::Window>>)
     {
+         // axis events
+         match window.borrow_mut().get_key(glfw::Key::W) {
+            glfw::Action::Press => println!("w was pressed axis"),
+            _ => (),
+        }
+
         self.m_Count -= 1;
 
         if self.m_Count == 0 {
@@ -47,17 +53,12 @@ impl State for Level
 
     fn HandleKeyBoardInput(
         &mut self,
-        window: Rc<RefCell<glfw::Window>>,
+        _window: Rc<RefCell<glfw::Window>>,
         key: glfw::Key,
         action: glfw::Action,
         _modifiers: glfw::Modifiers,
     ) {
-        // axis events
-        match window.borrow_mut().get_key(glfw::Key::W) {
-            glfw::Action::Press => println!("w was pressed axis"),
-            _ => (),
-        }
-
+       
         // action events
         match key
         {
@@ -68,6 +69,11 @@ impl State for Level
             }
             glfw::Key::A => match action {
                 glfw::Action::Press => println!("A was pressed action"),
+                glfw::Action::Release => println!("A was released action"),
+                _ => (),
+            },
+            glfw::Key::B => match action {
+                glfw::Action::Release => println!("B was released action"),
                 _ => (),
             },
 

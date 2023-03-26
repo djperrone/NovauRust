@@ -32,10 +32,10 @@ impl StateMachine {
         };
     }
 
-    pub fn Update(&mut self) -> () {
+    pub fn Update(&mut self, window: Rc<RefCell<glfw::Window>>) -> () {
         for s in &self.m_States {
-            s.borrow_mut().Update();
-            s.borrow_mut().Draw();
+            s.borrow_mut().Update(window.clone());
+            s.borrow_mut().Draw(window.clone());
         }
     }
 

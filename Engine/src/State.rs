@@ -7,10 +7,10 @@ extern crate glfw;
 extern crate gl;
 
 pub trait State {
-    fn Update(&mut self) {
+    fn Update(&mut self, window : Rc<RefCell<glfw::Window>>) {
         // info!("default update");
     }
-    fn Draw(&mut self) {
+    fn Draw(&mut self, window : Rc<RefCell<glfw::Window>>) {
         // info!("default draw");
     }
     fn HandleKeyBoardInput(&mut self, _window: Rc<RefCell<glfw::Window>>, _key : glfw::Key, _action : glfw::Action, _modifiers : glfw::Modifiers) {
@@ -64,7 +64,7 @@ impl DefaultState {
     }
 }
 impl State for DefaultState {
-    fn Update(&mut self) {
+    fn Update(&mut self, window : Rc<RefCell<glfw::Window>>) {
         info!("Default state update");
     }
 

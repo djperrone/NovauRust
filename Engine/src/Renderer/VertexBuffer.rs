@@ -1,31 +1,35 @@
-use std::mem::size_of;
+use std::mem;
 // use std::mem::size_of_val;
 
 extern crate gl;
 extern crate glfw;
 
-use gl::types::GLfloat;
+// use gl::types::GLfloat;
 use gl::types::GLsizeiptr;
 use gl::types::GLuint;
 use std::os::raw::c_void;
 
-// use super::VertexData::VertexData;
+// user 
+
+use super::VertexData::VertexData;
 
 // crate VertexData;
 
-struct VertexBuffer {
+pub struct VertexBuffer {
     m_VertexBufferID: GLuint,
 }
 
 impl VertexBuffer {
     pub fn new() -> Self {
-        unsafe {
-            let mut bufferID: GLuint = 0;
-            gl::GenBuffers(1, &mut bufferID);
 
-            VertexBuffer {
-                m_VertexBufferID: bufferID,
-            }
+        let bufferId = unsafe {
+            let mut id: GLuint = 0;
+            gl::GenBuffers(1, &mut id);
+            id
+        };
+
+        VertexBuffer {
+            m_VertexBufferID: bufferId,
         }
     }
     // ~VertexBuffer();
@@ -44,24 +48,29 @@ impl VertexBuffer {
 
     pub unsafe fn SetData(
         &mut self,
-        position: &mut glm::Vec3,
-        color: &mut glm::Vec4,
-        quantity: &mut glm::Vec2,
-        textureSlot: f32,
+        data : Vec<VertexData>
+        // position: &mut glm::Vec3,
+        // color: &mut glm::Vec4,
+        // quantity: &mut glm::Vec2,
+        // textureSlot: f32,
     ) -> () {
         
-        let mut data: Vec<f32> = vec![];
-        data.append(&mut position.as_array_mut().to_vec());
-        data.append(&mut color.as_array_mut().to_vec());
-        data.append(&mut quantity.as_array_mut().to_vec());
-        data.push(textureSlot);
+        // let mut data: Vec<f32> = vec![];
+
+        // data.append(&mut position.as_array_mut().to_vec());
+        // data.append(&mut color.as_array_mut().to_vec());
+        // data.append(&mut quantity.as_array_mut().to_vec());
+        // data.push(textureSlot);
         
-        gl::BindBuffer(gl::ARRAY_BUFFER, self.GetId());
+        // gl::BindBuffer(gl::ARRAY_BUFFER, self.GetId());
+
+        self.Bind();
 
         gl::BufferData(
             gl::ARRAY_BUFFER,
-            (data.len() * size_of::<GLfloat>()) as GLsizeiptr,
-            &data[0] as *const f32 as *const c_void,
+            (data.len() * mem::size_of::<VertexData>()) as GLsizeiptr,
+            // (data.len() * size_of::<GLfloat>()) as GLsizeiptr,
+            &data[0] as *const VertexData as *const c_void,
             gl::STATIC_DRAW,
         );
 

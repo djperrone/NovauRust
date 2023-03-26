@@ -86,6 +86,11 @@ impl NovaContext {
                     self.m_Height = height as u32;
                 }
 
+                glfw::WindowEvent::Scroll(xOffset,yoffset , )=>
+                {
+                    
+                }
+
                 glfw::WindowEvent::Key(key, _, action, modifiers) =>
                 {
                     // inputController.borrow_mut().HandleActionEvent(key, Action::Press, None)

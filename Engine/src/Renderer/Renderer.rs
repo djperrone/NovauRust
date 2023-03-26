@@ -1,8 +1,4 @@
 
-use std::cell::RefCell;
-use std::rc::Rc;
-
-
 // use self::glfw::Context;
 
 extern crate glfw;
@@ -19,7 +15,7 @@ use std::str;
 use std::mem;
 use std::os::raw::c_void;
 
-const vertexShaderSource: &str = r#"
+const VERTEX_SHADER_SOURCE: &str = r#"
     #version 330 core
     layout (location = 0) in vec3 aPos;
     void main() {
@@ -27,7 +23,7 @@ const vertexShaderSource: &str = r#"
     }
 "#;
 
-const fragmentShaderSource: &str = r#"
+const FRAGMENT_SHADER_SOURCE: &str = r#"
     #version 330 core
     out vec4 FragColor;
     void main() {
@@ -51,7 +47,7 @@ impl Renderer
         
 
      let vertexShader = gl::CreateShader(gl::VERTEX_SHADER);
-        let c_str_vert = CString::new(vertexShaderSource.as_bytes()).unwrap();
+        let c_str_vert = CString::new(VERTEX_SHADER_SOURCE.as_bytes()).unwrap();
         gl::ShaderSource(vertexShader, 1, &c_str_vert.as_ptr(), ptr::null());
         gl::CompileShader(vertexShader);
 
@@ -67,7 +63,7 @@ impl Renderer
 
         // fragment shader
         let fragmentShader = gl::CreateShader(gl::FRAGMENT_SHADER);
-        let c_str_frag = CString::new(fragmentShaderSource.as_bytes()).unwrap();
+        let c_str_frag = CString::new(FRAGMENT_SHADER_SOURCE.as_bytes()).unwrap();
         gl::ShaderSource(fragmentShader, 1, &c_str_frag.as_ptr(), ptr::null());
         gl::CompileShader(fragmentShader);
         // check for shader compile errors

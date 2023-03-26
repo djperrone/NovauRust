@@ -1,12 +1,13 @@
 use crate::Renderer::Renderer::Renderer;
 use crate::State::State;
 use crate::StateMachine::StateMachine;
+use crate::CameraController::CameraController;
 
 use std::cell::RefCell;
 use std::rc::Rc;
 type StateRef = Rc<RefCell<dyn State>>;
 
-use crate::OpenGLContext::*;
+use crate::{OpenGLContext::*};
 // use spdlog::prelude::*;
 
 pub struct App {
@@ -15,6 +16,7 @@ pub struct App {
     m_StateMachine: Rc<RefCell<StateMachine>>,
     m_Context: Rc<RefCell<NovaContext>>,
     m_Renderer: Rc<RefCell<Renderer>>,
+    m_CameraController : Rc<RefCell<CameraController>>,
 }
 
 impl App {
@@ -25,12 +27,13 @@ impl App {
             m_StateMachine: Rc::new(RefCell::new(StateMachine::new())),
             m_Context: Rc::new(RefCell::new(NovaContext::new(title, width, height))),
             m_Renderer: Rc::new(RefCell::new(Renderer::new())),
+            m_CameraController : Rc::new(RefCell::new(CameraController::new(width as f32, height as f32))),
         }
     }
 
     pub fn Update(&mut self) {
         // info!("App updating...");
-        self.m_StateMachine.borrow_mut().Update();
+        self.m_StateMachine.borrow_mut().Update(self.m_Context.borrow_mut().GetWindow());
     }
 
     pub fn IsRunning(&self) -> bool {
@@ -47,6 +50,7 @@ impl App {
             .SetClearColor(0.2, 0.3, 0.3, 1.0);
 
         self.m_StateMachine.borrow_mut().PushState(initialState);
+        
 
         loop {
             let currentState = self.GetStateMachine().borrow_mut().GetCurrentState();

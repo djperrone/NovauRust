@@ -1,6 +1,11 @@
-use crate::State::State;
 use std::cell::RefCell;
 use std::rc::Rc;
+
+use crate::Camera::Camera;
+use crate::Renderer::IRenderer::IRenderer;
+use crate::State::State;
+
+
 
 type StateRef = Rc<RefCell<dyn State>>;
 
@@ -10,6 +15,8 @@ pub struct StateMachine {
 
 impl StateMachine {
     pub fn new() -> Self {
+        println!("sm new here");
+
         StateMachine {
             m_States: Vec::new(),
         }
@@ -32,10 +39,10 @@ impl StateMachine {
         };
     }
 
-    pub fn Update(&mut self, window: Rc<RefCell<glfw::Window>>) -> () {
+    pub fn Update(&mut self, window: Rc<RefCell<glfw::Window>>, renderer : Rc<RefCell<IRenderer>>, camera : &Camera, deltaTime : f64) -> () {
         for s in &self.m_States {
             s.borrow_mut().Update(window.clone());
-            s.borrow_mut().Draw(window.clone());
+            s.borrow_mut().Draw(window.clone(), renderer.clone(), camera, deltaTime);
         }
     }
 

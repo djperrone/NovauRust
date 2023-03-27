@@ -24,6 +24,8 @@ pub struct NovaContext {
 
 impl NovaContext {
     pub fn new(title: &str, width: u32, height: u32) -> Self {
+        println!("context new here");
+
         // let sdl = InitSDL();
         // let win = InitWindow(title, width, height, sdl.clone());
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
@@ -135,5 +137,10 @@ impl NovaContext {
         unsafe {
             gl::ClearColor(r, g, b, a);
         }
+    }
+
+    pub fn GetTime(&self) -> f64
+    {
+        self.m_GLFW.borrow_mut().get_time()
     }
 }

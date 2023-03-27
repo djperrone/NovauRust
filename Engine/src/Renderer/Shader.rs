@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::ffi::CString;
+use std::ptr;
 use std::ptr::null;
 use std::ptr::null_mut;
 // use std::mem::size_of_val;
@@ -57,13 +59,23 @@ impl Shader
 
     unsafe fn CompileShader(shaderType : u32, source : String) -> u32
     {
+        println!("shader compile here");
+
         // let id = glCreateShader(shaderType);
         let id = gl::CreateShader(shaderType);
 
-        // const char* src = source.c_str();
+        let c_str_frag = CString::new(source.as_bytes()).unwrap();
 
-        gl::ShaderSource(id, 1, source.as_ptr() as *const * const i8, null());
+
+        // const char* src = source.c_str();
+        
+        // gl::ShaderSource(id, 1, source.as_ptr() as *const *const i8, null());
+        gl::ShaderSource(id, 1, &c_str_frag.as_ptr(), ptr::null());
+
+        println!("shader compile here 2");
         gl::CompileShader(id);
+
+
 
         let mut success = 1;
         // char infoLog[512];
@@ -84,21 +96,29 @@ impl Shader
             // println!("ERROR::SHADER::" << ({type} == gl::VERTEX_SHADER ? "vertex" : "fragment") << "VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
             gl::DeleteShader(id);
             return 0;
-        };
+        }
+
+        println!("shader compile here 3");
+
 
         return id;
     }
 
     unsafe fn CreateShader(vertexShader : String, fragmentShader : String) -> u32
     {
+        println!("shader create here");
+
         let program = gl::CreateProgram();
         let vertex = Self::CompileShader(gl::VERTEX_SHADER, vertexShader);
+        println!("shader create here 2");
         let fragment = Self::CompileShader(gl::FRAGMENT_SHADER, fragmentShader);
 
 
         gl::AttachShader(program, vertex);
         gl::AttachShader(program, fragment);
         gl::LinkProgram(program);
+
+
 
         let mut success = 1;
         let mut infoLog = String::with_capacity(512);
@@ -112,9 +132,15 @@ impl Shader
             return 0;
         }
 
+        println!("shader create here 3");
+
+
         // delete the shaders as they're linked into our program now and no longer necessary
         gl::DeleteShader(vertex);
         gl::DeleteShader(fragment);
+
+        println!("shader create here 4");
+
 
         return program;
     }

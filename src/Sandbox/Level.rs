@@ -1,5 +1,6 @@
 
 
+use Engine::Camera::Camera;
 use Engine::State::State;
 
 use spdlog::prelude::*;
@@ -39,6 +40,19 @@ impl State for Level
         if self.m_Count == 0 {
             info!("Level update difficult {}", self.difficulty);
             self.m_IsRunning = false;
+        }
+    }
+
+    fn Draw(&mut self, window : Rc<RefCell<glfw::Window>>, renderer : Rc<RefCell<Engine::Renderer::IRenderer::IRenderer>>, camera : &Camera, deltaTime : f64)
+    {
+
+        println!("level draw");
+        unsafe 
+        {
+            renderer.borrow_mut().BeginScene(camera);
+
+            renderer.borrow_mut().DrawRectangle(&glm::Vec3::new(0.0, 0.0, 0.0), &glm::Vec3::new(0.5, 0.5, 1.0), &glm::Vec4::new(0.7, 0.3, 0.5, 1.0));
+		    // renderer.borrow_mut().EndScene();
         }
     }
 

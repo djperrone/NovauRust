@@ -1,7 +1,10 @@
-use std::cell::RefCell;
+use std::cell::{RefCell, Ref};
 use std::rc::Rc;
 
 use spdlog::prelude::*;
+
+use crate::Camera::Camera;
+use crate::Renderer::IRenderer::IRenderer;
 
 extern crate glfw;
 extern crate gl;
@@ -10,7 +13,7 @@ pub trait State {
     fn Update(&mut self, window : Rc<RefCell<glfw::Window>>) {
         // info!("default update");
     }
-    fn Draw(&mut self, window : Rc<RefCell<glfw::Window>>) {
+    fn Draw(&mut self, window : Rc<RefCell<glfw::Window>>, renderer : Rc<RefCell<IRenderer>>,camera : &Camera, deltaTime : f64) {
         // info!("default draw");
     }
     fn HandleKeyBoardInput(&mut self, _window: Rc<RefCell<glfw::Window>>, _key : glfw::Key, _action : glfw::Action, _modifiers : glfw::Modifiers) {

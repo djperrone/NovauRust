@@ -70,7 +70,7 @@ impl VertexBuffer {
             gl::ARRAY_BUFFER,
             (data.len() * mem::size_of::<VertexData>()) as GLsizeiptr,
             // (data.len() * size_of::<GLfloat>()) as GLsizeiptr,
-            &data[0] as *const VertexData as *const c_void,
+            &data[0] as *const VertexData as *const f32 as *const c_void,
             gl::STATIC_DRAW,
         );
 

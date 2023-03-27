@@ -55,6 +55,8 @@ impl CameraController
 {
     pub fn new(width : f32, height : f32) -> Self
     {
+        println!("camera controller new here");
+
         let zoomLevel = 1.0f32;
         let aspectRatio : f32 = width / height;
         let bounds = CameraBounds::new(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);

@@ -66,6 +66,8 @@ impl IRenderer
 {
     pub unsafe fn new() -> Self
     {
+        println!("irenderer new here");
+
         gl::PolygonMode(gl::FRONT_AND_BACK, gl::FILL);
 
 		gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
@@ -79,11 +81,12 @@ impl IRenderer
 		// gl::StencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 		gl::ClearColor(0.05f32, 0.05f32, 0.05f32, 1.0f32);
-
+		
 		let vertexArray = VertexArray::new();
 		let vertexBuffer = VertexBuffer::new();
 		// s_RenderData.TextureShader = std::make_unique<Shader>("Assets/Shaders/TextureShader.glsl");
 		let colorShader = Shader::new(String::from(VERTEX_SHADER), String::from(FRAGMENT_SHADER));
+		println!("irenderer new here2");
 		// s_RenderData.TextRenderShader = std::make_unique<Shader>("Assets/Shaders/TextRenderShader.glsl");
 
 		let numIndices = 6u32;
@@ -92,20 +95,28 @@ impl IRenderer
 			2,3,0		
         ];		
 
+
 		let indexBuffer = IndexBuffer::new(indices, numIndices);
 		 // aspect ratio
-		let mut defaultRectangleVertices :Vec<glm::Vec4> = Vec::with_capacity(4);
+		let mut defaultRectangleVertices :Vec<glm::Vec4> = Vec::new();
+		defaultRectangleVertices.resize(4, glm::Vector4::new(0.0,0.0,0.0,0.0));
 		defaultRectangleVertices[0] = glm::Vec4::new(-0.5, -0.5, 0.0, 1.0);
 		defaultRectangleVertices[1] = glm::Vec4::new( 0.5, -0.5, 0.0, 1.0);
 		defaultRectangleVertices[2] = glm::Vec4::new( 0.5,  0.5, 0.0, 1.0);
 		defaultRectangleVertices[3] = glm::Vec4::new(-0.5,  0.5, 0.0, 1.0);
 
-		let mut defaultTextureCoords :Vec<glm::Vec2> = Vec::with_capacity(4);
+		// let mut defaultTextureCoords :Vec<glm::Vec2> = Vec::with_capacity(4);
+
+		let mut defaultTextureCoords :Vec<glm::Vec2> = Vec::new();
+		defaultTextureCoords.resize(4, glm::Vector2::new(0.0,0.0));
 
 		defaultTextureCoords[0] = glm::vec2(0.0, 0.0);
 		defaultTextureCoords[1] = glm::vec2(1.0, 0.0);
 		defaultTextureCoords[2] = glm::vec2(1.0, 1.0);
 		defaultTextureCoords[3] = glm::vec2(0.0, 1.0);
+
+        println!("irenderer new here3");
+
 
 		IRenderer
 		{
@@ -150,7 +161,11 @@ impl IRenderer
 		// s_RenderData.TextRenderShader->SetUniformMat4f("u_ViewProjectionMatrix", camera.GetViewProjectionMatrix());
 	}
 
-    pub unsafe fn DrawRectangle(&mut self, position : &glm::Vec3, scale :&glm::Vec3, color : &glm::Vec4 , _texture : String, _quantity: &glm::Vec2 )
+    pub unsafe fn DrawRectangle_Tutorial(&mut self, position : &glm::Vec3, scale :&glm::Vec3, color : &glm::Vec4 /*, _texture : String, _quantity: &glm::Vec2*/ )
+	{
+		
+	}
+    pub unsafe fn DrawRectangle(&mut self, position : &glm::Vec3, scale :&glm::Vec3, color : &glm::Vec4 /*, _texture : String, _quantity: &glm::Vec2*/ )
 	{
 		// tex = TextureLoader::LoadTexture(texture);
 		// tex.Bind();

@@ -1,4 +1,5 @@
 use crate::Renderer::Renderer::Renderer;
+use crate::Renderer::IRenderer::IRenderer;
 use crate::State::State;
 use crate::StateMachine::StateMachine;
 use crate::CameraController::CameraController;
@@ -11,29 +12,38 @@ use crate::{OpenGLContext::*};
 // use spdlog::prelude::*;
 
 pub struct App {
-    _m_DeltaTime: f32,
+    m_DeltaTime: f64,
+    m_LastTime : f64,
     m_IsRunning: bool,
     m_StateMachine: Rc<RefCell<StateMachine>>,
     m_Context: Rc<RefCell<NovaContext>>,
-    m_Renderer: Rc<RefCell<Renderer>>,
+    m_Renderer: Rc<RefCell<IRenderer>>,
     m_CameraController : Rc<RefCell<CameraController>>,
 }
 
 impl App {
     pub fn new(title: &str, width: u32, height: u32) -> Self {
-        App {
-            _m_DeltaTime: 0.0,
-            m_IsRunning: true,
-            m_StateMachine: Rc::new(RefCell::new(StateMachine::new())),
-            m_Context: Rc::new(RefCell::new(NovaContext::new(title, width, height))),
-            m_Renderer: Rc::new(RefCell::new(Renderer::new())),
-            m_CameraController : Rc::new(RefCell::new(CameraController::new(width as f32, height as f32))),
+        println!("app new here");
+
+        unsafe {
+
+            App {
+                m_DeltaTime: 0.0,
+                m_LastTime : 0.0,
+                m_IsRunning: true,
+                m_StateMachine: Rc::new(RefCell::new(StateMachine::new())),
+                m_Context: Rc::new(RefCell::new(NovaContext::new(title, width, height))),
+                m_Renderer: Rc::new(RefCell::new(IRenderer::new())),
+                m_CameraController : Rc::new(RefCell::new(CameraController::new(width as f32, height as f32))),
+            }
         }
+
+        
     }
 
     pub fn Update(&mut self) {
         // info!("App updating...");
-        self.m_StateMachine.borrow_mut().Update(self.m_Context.borrow_mut().GetWindow());
+        // self.m_StateMachine.borrow_mut().Update(self.m_Context.borrow_mut().GetWindow());
     }
 
     pub fn IsRunning(&self) -> bool {
@@ -78,6 +88,8 @@ impl App {
                 break;
             }
 
+            //=-----------------------------------------------------------------
+
             if currentState.borrow_mut().ShouldTransition() {
                 // push next state
                 let nextState = currentState.borrow_mut().GetNextState();
@@ -86,13 +98,25 @@ impl App {
                 sm.PopState();
                 sm.PushState(nextState);
             } else {
+
+                println!("app update here");
+                let currentTime = self.m_Context.borrow().GetTime();
+                self.m_DeltaTime = currentTime - self.m_LastTime;
+                self.m_LastTime = currentTime;
+                //----------------------------update is here
                 self.m_Context.borrow_mut().ClearWindow();
 
-                self.Update();
+                // self.Update();
 
-                self.m_Renderer.borrow_mut().DrawTriangle();
+                self.m_StateMachine.borrow_mut().Update(self.m_Context.borrow_mut().GetWindow(), self.m_Renderer.clone(), self.m_CameraController.borrow_mut().GetCamera(), self.m_DeltaTime);
+
+
+                // self.m_Renderer.borrow_mut().DrawTriangle();
 
                 self.m_Context.borrow_mut().SwapBuffers();
+
+                println!("app update here2");
+
 
                 // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
                 // -------------------------------------------------------------------------------

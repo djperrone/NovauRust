@@ -28,12 +28,12 @@ impl VertexArray
         }
 	}
 
-	pub unsafe fn AddBuffer(&self, vb : &mut VertexBuffer, location : u32, size : u32, bufferType : GLenum , normalized : u8, stride : u32, offset : u32)
+	pub unsafe fn AddBuffer(&self, vb : &mut VertexBuffer, location : u32, size : u32, bufferType : GLenum , normalized : u8, stride : i32, offset : usize)
 	{
 		self.Bind();
 		vb.Bind();
 		gl::EnableVertexAttribArray(location);
-		gl::VertexAttribPointer(location, size as i32, bufferType, normalized, stride as i32, &offset as *const u32 as *const c_void);
+		gl::VertexAttribPointer(location, size as i32, bufferType, normalized, stride as i32, offset as *const gl::types::GLvoid);
 	}
 
 	pub unsafe fn Bind(&self) 
@@ -50,6 +50,7 @@ impl VertexArray
 impl Drop for VertexArray {
     fn drop(&mut self) {
         unsafe {
+			println!("dropping vertex array");
             gl::DeleteBuffers(1, &mut self.m_VertexArrayID);
         }
     }

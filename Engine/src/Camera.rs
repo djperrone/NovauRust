@@ -2,7 +2,7 @@
 
 use crate::Novaura::{ConvertMatToGLM, Identity};
 
-
+use glm::*;
 pub struct Camera
 {
     m_ProjectionMatrix : glm::Mat4 ,
@@ -17,10 +17,13 @@ impl Camera
 {
     pub fn new(left : f32 , right : f32, bottom : f32 , top : f32 ) -> Self
     {
-        let projMat = nalgebra_glm::ortho(left, right, bottom, top, -1.0, 1.0);
+        let projMat1 = nalgebra_glm::ortho(left, right, bottom, top, -1.0, 1.0);
         // let glm_mat : glm::Mat4 = ConvertMatToGLM(projMat);
+        
+        let projMat = ConvertMatToGLM(projMat1);
 
-        let projMat = ConvertMatToGLM(projMat);
+        println!("nalg{:?}", projMat1);
+        println!("glm{:?}", projMat);
         // let v : glm::Mat4 = 1.0;
 
         let viewMat = glm::Mat4::new(
@@ -45,6 +48,7 @@ impl Camera
         {
             self.m_ProjectionMatrix = ConvertMatToGLM(nalgebra_glm::ortho(left, right, bottom, top, -1.0, 1.0));
 		    self.m_ViewProjectionMatrix = self.m_ProjectionMatrix * self.m_ViewMatrix;
+            
         }
 
 		pub fn  GetPosition(&self) -> &glm::Vec3
@@ -67,7 +71,7 @@ impl Camera
 		pub fn GetViewProjectionMatrix(&self)-> &glm::Mat4 { return &self.m_ViewProjectionMatrix; }
 
 	
-		fn RecalculateViewMatrix(&mut self) -> ()
+		pub fn RecalculateViewMatrix(&mut self) -> ()
         {
             let transform : glm::Mat4 = glm::ext::translate(&glm::Mat4::new(
                 glm::Vec4::new(1.0, 0.0, 0.0, 0.0),

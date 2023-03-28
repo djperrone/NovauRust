@@ -163,7 +163,7 @@ impl IRenderer
 
     pub unsafe fn DrawRectangle_Tutorial(&mut self, position : &glm::Vec3, scale :&glm::Vec3, color : &glm::Vec4 /*, _texture : String, _quantity: &glm::Vec2*/ )
 	{
-		
+
 	}
     pub unsafe fn DrawRectangle(&mut self, position : &glm::Vec3, scale :&glm::Vec3, color : &glm::Vec4 /*, _texture : String, _quantity: &glm::Vec2*/ )
 	{
@@ -171,35 +171,35 @@ impl IRenderer
 		// tex.Bind();
 		// s_RenderData.TextureShader->SetUniform2f("u_Quantity", quantity.x, quantity.y);
 
-		let mut vertices : Vec<VertexData> = Vec::with_capacity(4);
+		// let mut vertices : Vec<VertexData> = Vec::with_capacity(4);
         
         
-		let transform : glm::Mat4 = glm::ext::translate(&Identity(), glm::Vec3::new(position.x, position.y, position.z)) * glm::ext::scale(&Identity(), glm::Vec3::new(scale.x, scale.y, scale.z));
-		let mut temp = transform * self.defaultRectangleVertices[0];
-		vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[0]));
+		// let transform : glm::Mat4 = glm::ext::translate(&Identity(), glm::Vec3::new(position.x, position.y, position.z)) * glm::ext::scale(&Identity(), glm::Vec3::new(scale.x, scale.y, scale.z));
+		// let mut temp = transform * self.defaultRectangleVertices[0];
+		// vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[0]));
 		
-		temp = transform * self.defaultRectangleVertices[1];
+		// temp = transform * self.defaultRectangleVertices[1];
 		
-		vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[1]));
+		// vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[1]));
 		
-		temp = transform * self.defaultRectangleVertices[2];
-		vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[2]));
-		temp = transform * self.defaultRectangleVertices[3];
+		// temp = transform * self.defaultRectangleVertices[2];
+		// vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[2]));
+		// temp = transform * self.defaultRectangleVertices[3];
 
-		vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[3]));
-		//vertices.push(, color, self.defaultTextureCoords[2]);
-		//vertices.push(transform * self.defaultRectangleVertices[3], color, self.defaultTextureCoords[3]);
+		// vertices.push(VertexData::new(glm::Vec3::new(temp.x, temp.y, temp.z), *color, self.defaultTextureCoords[3]));
+		// //vertices.push(, color, self.defaultTextureCoords[2]);
+		// //vertices.push(transform * self.defaultRectangleVertices[3], color, self.defaultTextureCoords[3]);
 
-		self.vertexBuffer.SetData(vertices);
-		self.vertexArray.AddBuffer(&mut self.vertexBuffer, 0, 3, gl::FLOAT, gl::FALSE, mem::size_of::<VertexData>()as u32, 0);
-		self.vertexArray.AddBuffer(&mut self.vertexBuffer, 1, 4, gl::FLOAT, gl::FALSE, mem::size_of::<VertexData>()as u32,VertexData::OffsetOfColor() as u32);
-		self.vertexArray.AddBuffer(&mut self.vertexBuffer, 2, 2, gl::FLOAT, gl::FALSE, mem::size_of::<VertexData>()as u32, VertexData::OffsetOfTexCoord() as u32);
-		self.vertexArray.Bind();
-		self.vertexBuffer.Bind();
-		self.indexBuffer.Bind();
+		// // self.vertexBuffer.SetData(vertices); ***********************************
+		// self.vertexArray.AddBuffer(&mut self.vertexBuffer, 0, 3, gl::FLOAT, gl::FALSE, mem::size_of::<VertexData>()as u32, 0);
+		// self.vertexArray.AddBuffer(&mut self.vertexBuffer, 1, 4, gl::FLOAT, gl::FALSE, mem::size_of::<VertexData>()as u32,VertexData::OffsetOfColor() as u32);
+		// self.vertexArray.AddBuffer(&mut self.vertexBuffer, 2, 2, gl::FLOAT, gl::FALSE, mem::size_of::<VertexData>()as u32, VertexData::OffsetOfTexCoord() as u32);
+		// self.vertexArray.Bind();
+		// self.vertexBuffer.Bind();
+		// self.indexBuffer.Bind();
 
-		//shader.SetUniform4f("u_Color", m_Color);
-		gl::DrawElements(gl::TRIANGLES, self.indexBuffer.GetCount() as i32, gl::UNSIGNED_INT, null());
+		// //shader.SetUniform4f("u_Color", m_Color);
+		// gl::DrawElements(gl::TRIANGLES, self.indexBuffer.GetCount() as i32, gl::UNSIGNED_INT, null());
 		// tex.UnBind();
 	}
 }

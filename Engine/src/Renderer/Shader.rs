@@ -8,6 +8,7 @@ use std::ptr::null_mut;
 extern crate gl;
 extern crate glfw;
 
+use gl::types::GLfloat;
 use gl::types::GLsizei;
 // use gl::types::GLfloat;
 use gl::types::GLchar;
@@ -59,7 +60,6 @@ impl Shader
 
     unsafe fn CompileShader(shaderType : u32, source : String) -> u32
     {
-        println!("shader compile here");
 
         // let id = glCreateShader(shaderType);
         let id = gl::CreateShader(shaderType);
@@ -72,7 +72,6 @@ impl Shader
         // gl::ShaderSource(id, 1, source.as_ptr() as *const *const i8, null());
         gl::ShaderSource(id, 1, &c_str_frag.as_ptr(), ptr::null());
 
-        println!("shader compile here 2");
         gl::CompileShader(id);
 
 
@@ -98,7 +97,6 @@ impl Shader
             return 0;
         }
 
-        println!("shader compile here 3");
 
 
         return id;
@@ -106,11 +104,8 @@ impl Shader
 
     unsafe fn CreateShader(vertexShader : String, fragmentShader : String) -> u32
     {
-        println!("shader create here");
-
         let program = gl::CreateProgram();
         let vertex = Self::CompileShader(gl::VERTEX_SHADER, vertexShader);
-        println!("shader create here 2");
         let fragment = Self::CompileShader(gl::FRAGMENT_SHADER, fragmentShader);
 
 
@@ -132,15 +127,9 @@ impl Shader
             return 0;
         }
 
-        println!("shader create here 3");
-
-
         // delete the shaders as they're linked into our program now and no longer necessary
         gl::DeleteShader(vertex);
         gl::DeleteShader(fragment);
-
-        println!("shader create here 4");
-
 
         return program;
     }
@@ -177,7 +166,7 @@ impl Shader
 
     pub unsafe fn SetUniformMat4f(&mut self, name : &str, matrix : &glm::Mat4)
     {
-        gl::UniformMatrix4fv(self.GetUniformLocation(name),1, gl::FALSE, matrix.as_array().as_ptr() as *const f32);
+        gl::UniformMatrix4fv(self.GetUniformLocation(name),1, gl::FALSE, matrix.as_array().as_ptr() as *const GLfloat);
     }
 
     pub unsafe fn SetBool(&mut self, name : &str, value : bool) 

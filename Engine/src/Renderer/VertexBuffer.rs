@@ -11,6 +11,7 @@ use std::os::raw::c_void;
 
 // user 
 
+use super::VertexData::CircleVertexData;
 use super::VertexData::VertexData;
 
 // crate VertexData;
@@ -49,30 +50,27 @@ impl VertexBuffer {
     pub unsafe fn SetData(
         &mut self,
         data : Vec<VertexData>
-        // position: &mut glm::Vec3,
-        // color: &mut glm::Vec4,
-        // quantity: &mut glm::Vec2,
-        // textureSlot: f32,
     ) -> () {
-        
-        // let mut data: Vec<f32> = vec![];
-
-        // data.append(&mut position.as_array_mut().to_vec());
-        // data.append(&mut color.as_array_mut().to_vec());
-        // data.append(&mut quantity.as_array_mut().to_vec());
-        // data.push(textureSlot);
-        
-        // gl::BindBuffer(gl::ARRAY_BUFFER, self.GetId());
-
         self.Bind();
 
-        gl::BufferData(
-            gl::ARRAY_BUFFER,
+        gl::BufferData(gl::ARRAY_BUFFER,
             (data.len() * mem::size_of::<VertexData>()) as GLsizeiptr,
-            // (data.len() * size_of::<GLfloat>()) as GLsizeiptr,
-            &data[0] as *const VertexData as *const f32 as *const c_void,
-            gl::STATIC_DRAW,
-        );
+                       &data[0] as *const VertexData as *const f32 as *const c_void,
+                       gl::STATIC_DRAW);
+
+        self.UnBind();
+    }
+
+    pub unsafe fn SetCircleData(
+        &mut self,
+        data : Vec<CircleVertexData>
+    ) -> () {
+        self.Bind();
+
+        gl::BufferData(gl::ARRAY_BUFFER,
+            (data.len() * mem::size_of::<CircleVertexData>()) as GLsizeiptr,
+                       &data[0] as *const CircleVertexData as *const f32 as *const c_void,
+                       gl::STATIC_DRAW);
 
         self.UnBind();
     }

@@ -61,8 +61,6 @@ impl CameraController
         let aspectRatio : f32 = width / height;
         let bounds = CameraBounds::new(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 
-       // : m_AspectRatio(width / height), m_Bounds({ -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel }),
-       //  m_Camera(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top), m_Rotation(0)
         CameraController
         {
             m_AspectRatio : width / height,
@@ -76,7 +74,6 @@ impl CameraController
             m_CameraRotation : 0.0, // = 0.0f;
             m_CameraTranslationSpeed : 1.0, // = 1.0f, 
         }
-        
     }
 
     pub fn Update(&mut self, window : Rc<RefCell<glfw::Window>>, deltaTime : f32)-> ()
@@ -116,6 +113,8 @@ impl CameraController
         self.m_Camera.SetPosition(&self.m_CameraPosition);
 
 		self.m_CameraTranslationSpeed = self.m_ZoomLevel;
+
+        self.m_Camera.RecalculateViewMatrix();
 
     }
 		//void OnEvent(Event& e);

@@ -3,6 +3,7 @@ use std::rc::Rc;
 
 use crate::Camera::Camera;
 use crate::Renderer::IRenderer::IRenderer;
+use crate::Renderer::SimpleRenderer::SimpleRenderer;
 use crate::State::State;
 
 
@@ -39,7 +40,7 @@ impl StateMachine {
         };
     }
 
-    pub fn Update(&mut self, window: Rc<RefCell<glfw::Window>>, renderer : Rc<RefCell<IRenderer>>, camera : &Camera, deltaTime : f64) -> () {
+    pub fn Update(&mut self, window: Rc<RefCell<glfw::Window>>, renderer : Rc<RefCell<SimpleRenderer>>, camera : &Camera, deltaTime : f64) -> () {
         for s in &self.m_States {
             s.borrow_mut().Update(window.clone());
             s.borrow_mut().Draw(window.clone(), renderer.clone(), camera, deltaTime);

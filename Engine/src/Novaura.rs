@@ -17,4 +17,11 @@ pub fn ConvertMatToGLM(mat : nalgebra_glm::Mat4) -> glm::Mat4
         glm::Vec4::new(mat[8],mat[9],mat[10],mat[11]),
         glm::Vec4::new(mat[12],mat[13],mat[14],mat[15]),
     )
+
+    // glm::Mat4::new(
+    //     glm::Vec4::new(mat[0],mat[4],mat[8],mat[12]),
+    //     glm::Vec4::new(mat[1],mat[5],mat[9],mat[13]),
+    //     glm::Vec4::new(mat[2],mat[6],mat[10],mat[14]),
+    //     glm::Vec4::new(mat[3],mat[7],mat[11],mat[15]),
+    // )
 }

@@ -1,5 +1,5 @@
 use crate::Renderer::Renderer::Renderer;
-use crate::Renderer::IRenderer::IRenderer;
+use crate::Renderer::SimpleRenderer::SimpleRenderer;
 use crate::State::State;
 use crate::StateMachine::StateMachine;
 use crate::CameraController::CameraController;
@@ -17,13 +17,13 @@ pub struct App {
     m_IsRunning: bool,
     m_StateMachine: Rc<RefCell<StateMachine>>,
     m_Context: Rc<RefCell<NovaContext>>,
-    m_Renderer: Rc<RefCell<IRenderer>>,
+    m_Renderer: Rc<RefCell<SimpleRenderer>>,
     m_CameraController : Rc<RefCell<CameraController>>,
 }
 
 impl App {
     pub fn new(title: &str, width: u32, height: u32) -> Self {
-        println!("app new here");
+        // println!("app new here");
 
         unsafe {
 
@@ -33,7 +33,7 @@ impl App {
                 m_IsRunning: true,
                 m_StateMachine: Rc::new(RefCell::new(StateMachine::new())),
                 m_Context: Rc::new(RefCell::new(NovaContext::new(title, width, height))),
-                m_Renderer: Rc::new(RefCell::new(IRenderer::new())),
+                m_Renderer: Rc::new(RefCell::new(SimpleRenderer::new())),
                 m_CameraController : Rc::new(RefCell::new(CameraController::new(width as f32, height as f32))),
             }
         }
@@ -99,12 +99,14 @@ impl App {
                 sm.PushState(nextState);
             } else {
 
-                println!("app update here");
                 let currentTime = self.m_Context.borrow().GetTime();
                 self.m_DeltaTime = currentTime - self.m_LastTime;
                 self.m_LastTime = currentTime;
                 //----------------------------update is here
                 self.m_Context.borrow_mut().ClearWindow();
+
+                self.m_CameraController.borrow_mut().Update(self.m_Context.borrow_mut().GetWindow(), self.m_DeltaTime as f32);
+
 
                 // self.Update();
 
@@ -115,7 +117,6 @@ impl App {
 
                 self.m_Context.borrow_mut().SwapBuffers();
 
-                println!("app update here2");
 
 
                 // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
